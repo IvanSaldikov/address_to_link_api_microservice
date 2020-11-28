@@ -27,6 +27,9 @@ class CreateQueryView(generics.CreateAPIView):
         serializer.validated_data['link_to_ya_map'] = link
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        ret = {'link': link}
+        ret = {
+            'status': 'success',
+            'link': link
+        }
         return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
 
