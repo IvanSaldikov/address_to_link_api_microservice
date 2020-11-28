@@ -17,6 +17,6 @@ class YandexMapsQ(models.Model):
         return "%s" % (self.query_str)
 
     class Meta:
-        verbose_name = 'Запроса'
-        verbose_name_plural = 'Запросы'
+        verbose_name = 'Запрос'
+        verbose_name_plural = 'Запросов'
 

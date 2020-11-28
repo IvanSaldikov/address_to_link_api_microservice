@@ -47,4 +47,27 @@ class YandexMapsQ(models.Model):
         verbose_name_plural = 'Запросы'
 ```
 
+Создаем и исполняем миграции: 
+`python manage.py makemigrations`
+`python manage.py migrate`
+
 Делаем суперпользователя, чтобы можно было просмтривать через админку
+`python manage.py createsuperuser`
+
+
+Делаем сериализатор:
+    ```python
+    from rest_framework import serializers
+    from . import models
+    
+    class QueryDetailSerializer(serializers.ModelSerializer):
+        """Делаем запрос для добавления запроса в БД, а заодно используем модуль для извлечения данных по Яндекс.Картам"""
+    
+        class Meta:
+            model = models.YandexMapsQ
+            fields = '__all__'
+    ```
+    
+Дополнительные 10 лайфхаков сериализаторов DRF:
+https://zen.yandex.ru/media/sonus_space/10-laifhakov-dlia-django-rest-framework-chast-1-5c9fc77b72723e00b331d059
+https://zen.yandex.ru/media/sonus_space/10-laifhakov-dlia-django-rest-framework-chast-2-5ca0a25553239a00b3a731a0    
