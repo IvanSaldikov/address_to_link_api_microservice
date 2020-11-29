@@ -11,3 +11,4 @@ env/
 .env.release
 .env.test
 venv/
+*.sqlite3

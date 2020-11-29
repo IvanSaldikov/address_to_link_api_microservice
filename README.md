@@ -4,6 +4,8 @@
 
 Реализация RESTFul API на Django REST Framework: https://www.youtube.com/watch?v=C6S3dMt1s_M
 
+Django Secret Key generator: https://djecrety.ir/
+
 `django-admin startproject api`
 
 `python manage.py migrate`
@@ -18,6 +20,7 @@
     ...
         
         'rest_framework',
+        'yandex_maps',
     ]
                     
 `python manage.py startapp yandex_maps`
@@ -55,19 +58,68 @@ class YandexMapsQ(models.Model):
 `python manage.py createsuperuser`
 
 
-Делаем сериализатор:
-    ```python
+Делаем сериализатор `serializers.py`:
+    ```
     from rest_framework import serializers
     from . import models
-    
+
+
     class QueryDetailSerializer(serializers.ModelSerializer):
-        """Делаем запрос для добавления запроса в БД, а заодно используем модуль для извлечения данных по Яндекс.Картам"""
-    
+        """Делаем запрос для добавления запроса в БД"""
         class Meta:
             model = models.YandexMapsQ
-            fields = '__all__'
+            # Поля, доступные для внесения методом POST извне
+            fields = ('user', 'tguser', 'query_str', 'link_to_ya_map')
+
     ```
     
-Дополнительные 10 лайфхаков сериализаторов DRF:
-https://zen.yandex.ru/media/sonus_space/10-laifhakov-dlia-django-rest-framework-chast-1-5c9fc77b72723e00b331d059
-https://zen.yandex.ru/media/sonus_space/10-laifhakov-dlia-django-rest-framework-chast-2-5ca0a25553239a00b3a731a0    
+Делаем контроллеры во `views.py`:
+    ```
+    from rest_framework import generics
+    from . import serializers
+    from rest_framework.response import Response
+    from rest_framework import status
+    from yandex_maps.services.yandex import YandexMap
+    from yandex_maps.config import config
+    
+    
+    # Возвращаем ссылку на Яндекс-карты из строки адреса или -1, если ничего не найдено
+    def get_link(query_str: str) -> str:
+        yandex_map = YandexMap(config.YANDEX_API_KEY)
+        return yandex_map.get_link(query_str)
+    
+    
+    class CreateQueryView(generics.CreateAPIView):
+        """Добавляем запрос в БД"""
+        serializer_class = serializers.QueryDetailSerializer
+    
+        def create(self, request, *args, **kwargs):
+            """Переопределяем метод create для того, чтобы просто подменить ссылку для сохранения
+            и вернуть только ссылку пользователю"""
+            #request.data['link_to_ya_map'] = get_link(request.data['query_str'])
+            serializer = self.get_serializer(data=request.data)
+            #get_link(request.data['query_str'])
+            serializer.is_valid(raise_exception=True)
+            link = get_link(request.data['query_str'])
+            serializer.validated_data['link_to_ya_map'] = link
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            ret = {
+                'status': 'success',
+                'link': link
+            }
+            return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
+    ```
+    
+    
+Делаем `urls.py`:
+    ```
+    from django.contrib import admin
+    from django.urls import path, include
+    from . import views
+    
+    
+    urlpatterns = [
+        path('query/make/', views.CreateQueryView.as_view(), name='index'),
+    ]
+    ```

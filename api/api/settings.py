@@ -28,7 +28,10 @@ SECRET_KEY = config.DJANGO_SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config.DJANGO_DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost", "0.0.0.0", "127.0.0.1",
+    config.ALLOWED_HOST_4,
+]
 
 
 # Application definition
@@ -79,12 +82,26 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
+# Выбираем нужный движок
+db_sqlite3 = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+db_postgres = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': config.DB_NAME,
+        'USER': config.DB_USER,
+        'PASSWORD': config.DB_PASSWORD,
+        'HOST': config.DB_HOST,
+        'PORT': config.DB_PORT,
+    }
 }
+if config.DB_TYPE == 1:
+    db_choice = db_postgres
+else:
+    db_choice = db_sqlite3
+DATABASES = db_choice
 
 
 # Password validation
@@ -124,3 +141,34 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# SMTP e-mailing settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config.EMAIL_HOST
+EMAIL_PORT = config.EMAIL_PORT
+EMAIL_HOST_USER = config.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = config.EMAIL_HOST_APP_KEY
+EMAIL_USE_TLS = True
+
+# Настройка кэша
+CACHE_MIDDLEWARE_SECONDS = 20  # В секундах
+CACHE_MIDDLEWARE_KEY_PREFIX = 'api'
+CACHE_ENABLED = config.CACHE_ENABLED
+if CACHE_ENABLED and not DEBUG:
+    # Кэш на основе файлов
+    cache = {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': BASE_DIR / 'cache',
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+else:
+    # Мнимый кэш (нужен для dev-сервера, чтобы он не работал на dev-сервер, а потом отключать его на prod-е)
+    cache = {
+          'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+CACHES = {
+    'default': cache
+}
+
