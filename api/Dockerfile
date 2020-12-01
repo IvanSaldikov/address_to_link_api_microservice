@@ -12,7 +12,7 @@ ENV CONFIG_ROOT /config
 # install dependencies
 RUN pip install --upgrade pip
 RUN mkdir ${CONFIG_ROOT}
-COPY requirements.txt ${CONFIG_ROOT}/requirements.txt
+COPY api/requirements.txt ${CONFIG_ROOT}/requirements.txt
 RUN pip install -r ${CONFIG_ROOT}/requirements.txt
 
 # Создаем App директорию для приложения
