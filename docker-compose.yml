@@ -34,6 +34,9 @@ services:
     build:
       context: .
       dockerfile: api/Dockerfile
+    args:
+      UID: 1000
+      GID: 1000
     # монтируем директорию проекта
     volumes:
       - ./api:/srv/www/api

@@ -1,6 +1,14 @@
 # pull official base image
 FROM python:3.8.3
 
+# Создаем пользователя точно такого же, как и на виртуальной машине, чтобы создаваемые файлы были не под root-ом
+ARG UID=1000
+ARG GID=1000
+ENV UID=${UID}
+ENV GID=${GID}
+RUN usermod -u $UID www \
+  && groupmod -g $GID www
+
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -16,11 +24,5 @@ RUN mkdir ${CONFIG_ROOT}
 COPY api/requirements.txt ${CONFIG_ROOT}/requirements.txt
 RUN pip install -r ${CONFIG_ROOT}/requirements.txt
 
-# Создаем App директорию для приложения
-#RUN mkdir ${APP_ROOT}
-
 # set work directory
 WORKDIR ${APP_ROOT}
-
-#ADD . ${APP_ROOT}
-
