@@ -11,8 +11,8 @@ worker_class = 'gevent'
 workers = max_workers()
 
 env = {
-    'DJANGO_SETTINGS_MODULE': '<project>.settings'
+    'DJANGO_SETTINGS_MODULE': 'api.settings'
 }
 
 reload = True
-name = 'Project_name'
+name = 'api'
