@@ -13,12 +13,12 @@ services:
     # только свежий nginx
     image: nginx:latest
     container_name: ngx
-    # слушает порт 8080
+    # слушает порт 8000
     expose:
-      - 8080
-    # мапаем порт 80 на его 8080. Тогда сайт будет доступен по адресу localhost. Убедись, что порт у тебя не занят.
+      - 8000
+    # мапаем порт 80 на его 8000. Тогда сайт будет доступен по адресу localhost. Убедись, что порт у тебя не занят.
     ports:
-      - "80:8080"
+      - "80:8000"
     # монтируем только те директории, в которых лежит статика, т.к. nginx с динамикой не будет работать. Также директорию с логами и файл настройки, который мы подготовили.
     volumes:
       - ./api/static:/srv/www/api/static
@@ -45,6 +45,6 @@ services:
     ports:
       - "8000:8000"
     # запускаем gunicorn
-    command: "gunicorn -c gunicorn.py api.wsgi"
-      #"python3 manage.py runserver 0.0.0.0:8000"
+    #command: "gunicorn -c gunicorn.py api.wsgi"
+    command: "python3 manage.py runserver 0.0.0.0:8000"
 
