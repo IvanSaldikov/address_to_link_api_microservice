@@ -2,13 +2,18 @@ from rest_framework import generics
 from . import serializers
 from rest_framework.response import Response
 from rest_framework import status
-from yandex_maps.services.yandex import YandexMap
-from yandex_maps.config import config
+from .services.yandex import YandexMap
+
+# Параметры конфигурации приложения
+from environs import Env
+# Инициализация переменной для чтения переменных окружения или файла-.env
+env = Env()
+env.read_env()
 
 
 # Возвращаем ссылку на Яндекс-карты из строки адреса или -1, если ничего не найдено
 def get_link(query_str: str) -> str:
-    yandex_map = YandexMap(config.YANDEX_API_KEY)
+    yandex_map = YandexMap(env.str("YANDEX_API_KEY", ''))
     return yandex_map.get_link(query_str)
 
 

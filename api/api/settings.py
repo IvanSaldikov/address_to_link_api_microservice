@@ -13,7 +13,13 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 # Параметры конфигурации приложения
 
 from pathlib import Path
-from yandex_maps.config import config
+
+# Параметры конфигурации приложения
+from environs import Env
+# Инициализация переменной для чтения переменных окружения или файла-.env
+env = Env()
+env.read_env()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,14 +29,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config.DJANGO_SECRET_KEY
+SECRET_KEY = env.str("DJANGO_SECRET_KEY", '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config.DJANGO_DEBUG
+DEBUG = env.bool("DJANGO_DEBUG", False)
 
 ALLOWED_HOSTS = [
     "localhost", "0.0.0.0", "127.0.0.1",
-    config.ALLOWED_HOST_4,
+    env.str("ALLOWED_HOST_4", ''),
 ]
 
 
@@ -90,14 +96,14 @@ db_sqlite3 = {
 db_postgres = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': config.DB_NAME,
-        'USER': config.DB_USER,
-        'PASSWORD': config.DB_PASSWORD,
-        'HOST': config.DB_HOST,
-        'PORT': config.DB_PORT,
+        'NAME': env.str("DB_NAME", ''),
+        'USER': env.str("DB_USER", ''),
+        'PASSWORD': env.str("DB_PASSWORD", ''),
+        'HOST': env.str("DB_HOST", '127.0.0.1'),
+        'PORT': env.str("DB_PORT", 5432),
     }
 }
-if config.DB_TYPE == 1:
+if env.int("DB_TYPE", 0) == 1:
     db_choice = db_postgres
 else:
     db_choice = db_sqlite3
@@ -144,16 +150,16 @@ STATIC_URL = '/static/'
 
 # SMTP e-mailing settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config.EMAIL_HOST
-EMAIL_PORT = config.EMAIL_PORT
-EMAIL_HOST_USER = config.EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = config.EMAIL_HOST_APP_KEY
+EMAIL_HOST = env.str("EMAIL_HOST", '')
+EMAIL_PORT = env.str("EMAIL_PORT", '')
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER", '')
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_APP_KEY", '')
 EMAIL_USE_TLS = True
 
 # Настройка кэша
 CACHE_MIDDLEWARE_SECONDS = 20  # В секундах
 CACHE_MIDDLEWARE_KEY_PREFIX = 'api'
-CACHE_ENABLED = config.CACHE_ENABLED
+CACHE_ENABLED = env.bool("CACHE_ENABLED", False)
 if CACHE_ENABLED and not DEBUG:
     # Кэш на основе файлов
     cache = {
