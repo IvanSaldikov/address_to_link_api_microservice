@@ -21,4 +21,7 @@ RUN mkdir ${APP_ROOT}
 # set work directory
 WORKDIR ${APP_ROOT}
 
+# open port for Django
+EXPOSE 8000
+
 ADD . ${APP_ROOT}
