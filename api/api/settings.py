@@ -90,9 +90,11 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 # Выбираем нужный движок
 db_sqlite3 = {
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
 db_postgres = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -108,6 +110,7 @@ if env.int("DB_TYPE", 0) == 1:
 else:
     db_choice = db_sqlite3
 DATABASES = db_choice
+print(DATABASES)
 
 
 # Password validation
