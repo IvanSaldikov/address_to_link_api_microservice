@@ -123,3 +123,6 @@ class YandexMapsQ(models.Model):
         path('query/make/', views.CreateQueryView.as_view(), name='index'),
     ]
     ```
+    
+    
+  

@@ -1,26 +1,51 @@
-version: "3.7"
+version: "3"
 
+# хранилища
+volumes:
+  pgdata:
+    driver: local
+
+# Образы, которые мы хотим поднять
 services:
-  app:
-    build: api
-    container_name: django-gunicorn
+  nginx:
+    # при падении будет стараться подняться
     restart: always
+    # только свежий nginx
+    image: nginx:latest
+    container_name: ngx
+    # слушает порт 8080
+    expose:
+      - 8080
+    # мапаем порт 80 на его 8080. Тогда сайт будет доступен по адресу localhost. Убедись, что порт у тебя не занят.
+    ports:
+      - "80:8080"
+    # монтируем только те директории, в которых лежит статика, т.к. nginx с динамикой не будет работать. Также директорию с логами и файл настройки, который мы подготовили.
+    volumes:
+      - ./api/static:/srv/www/api/static
+      - ./api/media:/srv/www/api/media
+      - ./api/logs:/srv/www/api/logs
+      - ./nginx:/etc/nginx/conf.d
+    # и nginx зависит от контейнера python. Т.е. python должен быть запущен первым
+    depends_on:
+      - python
+  python:
+    restart: always
+    # указываем откуда собирать образ
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    # монтируем директорию проекта
+    volumes:
+      - ./api:/srv/www/api
+    container_name: python-django
     expose:
       - 8000
     env_file:
       - django.env
     ports:
       - "8000:8000"
+    # запускаем gunicorn
     command:
-      #"gunicorn --workers=2 --bind=0.0.0.0:8000 api.wsgi:application"
-      "python3 manage.py runserver 0.0.0.0:8000"
+      command: "gunicorn -c gunicorn.py api.wsgi"
+      #"python3 manage.py runserver 0.0.0.0:8000"
 
-#  nginx:
-#    image: nginx:1.17
-#    container_name: ngx
-#    ports:
-#      - "80:80"
-#    volumes:
-#      - ./nginx:/etc/nginx/conf.d
-#    depends_on:
-#      - app
