@@ -1,0 +1,26 @@
+FROM python:3.9
+
+WORKDIR /home
+
+ENV TZ=Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apt-get update && apt-get install sqlite3 && apt-get install git
+RUN git clone https://github.com/IvanSaldoZ/yandex_address_to_link_api_microservice
+CMD cd yandex_address_to_link_api_microservice/api
+RUN pip install -r requirements.txt
+#RUN python3 manage.py migrate
+COPY api/yandex_maps/config/.env.release /home/yandex_address_to_link_api_microservice/api/yandex_maps/config/
+RUN cp /home/yandex_address_to_link_api_microservice/api/yandex_maps/config/.env.release /home/yandex_address_to_link_api_microservice/api/yandex_maps/config/.env
+#RUN mkdir db
+#COPY db/* ./db/
+#RUN cat ./createdb_postgresql.sql | sqlite3  ./db/addresses.db
+
+# Для базы данных
+EXPOSE 5432
+EXPOSE 8001
+
+
+#CMD ["python3", "/home/yandex_address_to_link_api_microservice/api/manage.py", "migrate"]
+CMD ["python3", "/home/yandex_address_to_link_api_microservice/api/manage.py", "runserver", "0.0.0.0:8001"]
+#ENTRYPOINT ["python3", "manage.py", "runserver", "0.0.0.0:8001"]
