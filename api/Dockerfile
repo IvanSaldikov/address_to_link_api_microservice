@@ -2,6 +2,8 @@
 FROM python:3.8.3
 
 # Создаем пользователя точно такого же, как и на виртуальной машине, чтобы создаваемые файлы были не под root-ом
+RUN groupadd --gid 1000 www \
+  && useradd --uid 1000 --gid www --shell /bin/bash --create-home www
 ARG UID=1000
 ARG GID=1000
 ENV UID=${UID}

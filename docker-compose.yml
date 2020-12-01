@@ -49,6 +49,6 @@ services:
     ports:
       - "8000:8000"
     # запускаем gunicorn
-    #command: "gunicorn -c gunicorn.py api.wsgi"
-    command: "python3 manage.py runserver 0.0.0.0:8000"
+    command: "gunicorn -c gunicorn.py api.wsgi"
+    #command: "python3 manage.py runserver 0.0.0.0:8000"
 
