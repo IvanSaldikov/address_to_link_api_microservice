@@ -5,6 +5,8 @@ services:
     build: api
     container_name: django-gunicorn
     restart: always
+    expose:
+      - 8000
     env_file:
       - django.env
     ports:
