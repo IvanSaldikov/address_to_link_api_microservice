@@ -10,14 +10,15 @@ services:
     ports:
       - "8000:8000"
     command:
-      "gunicorn --workers=2 --bind=0.0.0.0:8000 api.wsgi:application"
+      #"gunicorn --workers=2 --bind=0.0.0.0:8000 api.wsgi:application"
+      "python manage.py runserver 0.0.0.0:8000"
 
-  nginx:
-    image: nginx:1.17
-    container_name: ngx
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-    depends_on:
-      - app
+#  nginx:
+#    image: nginx:1.17
+#    container_name: ngx
+#    ports:
+#      - "80:80"
+#    volumes:
+#      - ./nginx:/etc/nginx/conf.d
+#    depends_on:
+#      - app
