@@ -17,7 +17,7 @@ COPY api/requirements.txt ${CONFIG_ROOT}/requirements.txt
 RUN pip install -r ${CONFIG_ROOT}/requirements.txt
 
 # Создаем App директорию для приложения
-RUN mkdir ${APP_ROOT}
+#RUN mkdir ${APP_ROOT}
 
 # Копируем все файлы проекта в эту директорию в Докере
 COPY ./api ${APP_ROOT}
