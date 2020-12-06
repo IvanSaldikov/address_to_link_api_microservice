@@ -126,3 +126,26 @@ class YandexMapsQ(models.Model):
     
     
   
+### Комбинируем со фронтом:
+
+1. Нужен CORS, поэтому устанавливаем модуль для поддержки CORS: `pip install django-cors-headers`
+
+https://stackoverflow.com/questions/35760943/how-can-i-enable-cors-on-django-rest-framework
+
+2. Добавляем в установленные приложения:
+    ```
+    INSTALLED_APPS = (
+        ...
+        'corsheaders',
+        ...
+    )
+    ```
+3. И добавляем MIDDLEWARE:
+    ```
+    MIDDLEWARE_CLASSES = (
+        ...
+        'corsheaders.middleware.CorsMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        ...
+    )
+    ```
