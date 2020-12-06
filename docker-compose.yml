@@ -23,8 +23,8 @@ services:
       - "80:80"
     # монтируем только те директории, в которых лежит статика, т.к. nginx с динамикой не будет работать. Также директорию с логами и файл настройки, который мы подготовили.
     volumes:
-      #- ./api/static:/srv/www/api/static
-      #- ./api/media:/srv/www/api/media
+      - ./api/static:/srv/www/api/static
+      - ./api/media:/srv/www/api/media
       - ./api/logs:/srv/www/api/logs
       - ./nginx:/etc/nginx/conf.d
     # и nginx зависит от контейнера python. Т.е. python должен быть запущен первым

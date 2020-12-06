@@ -25,6 +25,7 @@ RUN pip install --upgrade pip
 RUN mkdir ${CONFIG_ROOT}
 COPY api/requirements.txt ${CONFIG_ROOT}/requirements.txt
 RUN pip install -r ${CONFIG_ROOT}/requirements.txt
+RUN django-admin collectstatic
 
 # set work directory
 WORKDIR ${APP_ROOT}
