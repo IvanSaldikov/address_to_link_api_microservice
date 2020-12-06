@@ -3,6 +3,7 @@ from . import serializers
 from rest_framework.response import Response
 from rest_framework import status
 from .services.yandex import YandexMap
+from .models import YandexMapsQ
 
 # Параметры конфигурации приложения
 from environs import Env
@@ -37,4 +38,10 @@ class CreateQueryView(generics.CreateAPIView):
             'link': link
         }
         return Response(ret, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class QueriesListView(generics.ListAPIView):
+    """Посмотреть список адресов в БД"""
+    serializer_class = serializers.QueriesListSerializer
+    queryset = YandexMapsQ.objects.all()
 
