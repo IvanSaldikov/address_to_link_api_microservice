@@ -23,3 +23,6 @@ https://www.haikson.com/programmirovanie/python/django-nginx-gunicorn-postgresql
 Для отлаживания контейнера можно использовать команду для захода внутрь приложения:
 
 `docker exec -it bash`
+
+Не забываем сделать команду до запуска приложения (--noinput, чтобы не подтверждать действие)
+`python manage.py collectstatic --noinput`
