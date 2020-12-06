@@ -1,5 +1,7 @@
 ### Как задеплоить через Docker DJANGO-приложение
 
+
+
 https://github.com/wiamsuri/django-gunicorn-nginx-docker
 
 Ready-To-Deploy Django, gunicorn, NGINX, Docker Application
@@ -17,3 +19,7 @@ Ready-To-Deploy Django, gunicorn, NGINX, Docker Application
 Всю инструкцию по разворачиванию Django-приложения смотрим на сайте:
 https://www.haikson.com/programmirovanie/python/django-nginx-gunicorn-postgresql-docker/
 
+
+Для отлаживания контейнера можно использовать команду для захода внутрь приложения:
+
+`docker exec -it bash`

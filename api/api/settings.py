@@ -110,7 +110,6 @@ if env.int("DB_TYPE", 0) == 1:
 else:
     db_choice = db_sqlite3
 DATABASES = db_choice
-print(DATABASES)
 
 
 # Password validation

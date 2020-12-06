@@ -1,3 +1,5 @@
+# CONFIG from https://www.haikson.com/programmirovanie/python/django-nginx-gunicorn-postgresql-docker/
+# CONFIG Nginx + Python 3 + Django
 version: "3"
 
 # хранилища
