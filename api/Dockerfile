@@ -30,4 +30,4 @@ RUN pip install -r ${CONFIG_ROOT}/requirements.txt
 WORKDIR ${APP_ROOT}
 
 # Collect static files
-RUN python manage.py collectstatic --noinput
+#RUN python3 manage.py collectstatic --noinput
